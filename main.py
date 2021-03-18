@@ -54,7 +54,6 @@ class MainWindow(QDialog):
         ax.plot(x_list, y_list)
         # обновляем canvas
         self.canvas.draw()
-    plot(get_data_plot(self))
 
 
 if __name__ == '__main__':
