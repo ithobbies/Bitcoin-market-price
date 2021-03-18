@@ -29,8 +29,7 @@ class MainWindow(QDialog):
         layout.addWidget(self.button)
         self.setLayout(layout)
 
-    def plot(self):
-        
+    def get_data_plot(self):        
         # запрос и получение данных через API blockchain.com
         url = 'https://api.blockchain.info/charts/market-price'
         params = {'timespan': '10year', 'rollingAverage': '8hours', 'format': 'json'}
@@ -46,14 +45,16 @@ class MainWindow(QDialog):
         for item in data["values"]:
             x_list.append(datetime.utcfromtimestamp(item['x']))
             y_list.append(item['y'])
-
+        return x_list, y_list
+    
+    def plot(self, x_list, y_list): 
         # создание координатной плоскости
         ax = self.figure.add_subplot(111)
         # построение линейного графика
         ax.plot(x_list, y_list)
-
         # обновляем canvas
         self.canvas.draw()
+    plot(get_data_plot(self))
 
 
 if __name__ == '__main__':
