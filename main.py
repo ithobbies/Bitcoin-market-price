@@ -36,11 +36,14 @@ class MainWindow(QDialog):
         params = {'timespan': '10year', 'rollingAverage': '8hours', 'format': 'json'}
         response = requests.get(url, params=params)
         data = response.json()
+        return data
 
         # чтение данных из JSON файла
         #with open('market_price.json') as file:
             #data = json.load(file)
 
+    def data_plot(self):
+        data = self.get_data_plot()
         x_list = []
         y_list = []
         for item in data["values"]:
@@ -53,7 +56,7 @@ class MainWindow(QDialog):
         # создание координатной плоскости
         ax = self.figure.add_subplot(111)
         # построение линейного графика
-        ax.plot(*self.get_data_plot())
+        ax.plot(*self.data_plot())
         # обновляем canvas
         self.canvas.draw()
 
