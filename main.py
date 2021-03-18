@@ -41,7 +41,8 @@ class MainWindow(QDialog):
         # чтение данных из JSON файла
         #with open('market_price.json') as file:
             #data = json.load(file)
-
+    
+    # обработка полученных JSON данных
     def data_plot(self):
         data = self.get_data_plot()
         x_list = []
