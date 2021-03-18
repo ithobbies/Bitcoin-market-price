@@ -29,6 +29,7 @@ class MainWindow(QDialog):
         layout.addWidget(self.button)
         self.setLayout(layout)
 
+    # функция получения данных через API
     def get_data_plot(self):        
         # запрос и получение данных через API blockchain.com
         url = 'https://api.blockchain.info/charts/market-price'
@@ -47,6 +48,7 @@ class MainWindow(QDialog):
             y_list.append(item['y'])
         return x_list, y_list
     
+    # функция построения графика
     def plot(self): 
         # создание координатной плоскости
         ax = self.figure.add_subplot(111)
