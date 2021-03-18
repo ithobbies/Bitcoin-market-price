@@ -47,11 +47,11 @@ class MainWindow(QDialog):
             y_list.append(item['y'])
         return x_list, y_list
     
-    def plot(self, x_list, y_list): 
+    def plot(self): 
         # создание координатной плоскости
         ax = self.figure.add_subplot(111)
         # построение линейного графика
-        ax.plot(x_list, y_list)
+        ax.plot(*self.get_data_plot())
         # обновляем canvas
         self.canvas.draw()
 
