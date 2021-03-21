@@ -1,5 +1,6 @@
 import sys
-from PyQt5.QtWidgets import QDialog, QApplication, QPushButton, QVBoxLayout, QHBoxLayout, QLineEdit
+from PyQt5 import QtGui, QtCore
+from PyQt5.QtWidgets import QDialog, QApplication, QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QSizePolicy, QSpacerItem
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pyplot as plt
 
@@ -21,6 +22,23 @@ class MainWindow(QDialog):
         # Canvas Widget отображающий `figure`
         # он принимает экземпляр `figure` в качестве параметра __init__
         self.canvas = FigureCanvas(self.figure)
+        self.canvas.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+
+        # параметры шрифта 
+        font = QtGui.QFont()
+        font.setFamily("Roboto")
+        font.setPointSize(16)
+        font.setBold(True)
+
+        # Label 
+        self.btc_label = QLabel('Цена Bitcoin (BTC):')
+        self.btc_label.setFont(font)
+        self.btc_label.setMaximumSize(QtCore.QSize(300, 60))
+
+        # виджет отображения текущей цены BTC
+        self.btc_price = QLabel()
+        self.btc_price.setFont(font)
+        self.btc_price.setText('$' + self.get_btc_price())
 
         # кнопка для построения графика за 7 дней
         self.btn_timespan_7_days = QPushButton('7 дней')
@@ -50,11 +68,20 @@ class MainWindow(QDialog):
         self.btn_plot = QPushButton('Построить график')
         self.btn_plot.clicked.connect(self.plot)
 
+        # добавляем spacer для прижатия к правому краю блока с Label
+        spacer_item = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
         # создаем вертикальный контейнер и помещаем виджеты
         vertical_layout = QVBoxLayout()
+        horizontal_layout = QHBoxLayout()
+        horizontal_layout.addItem(spacer_item)
+        horizontal_layout.addWidget(self.btc_label)
+        horizontal_layout.addWidget(self.btc_price)
+        vertical_layout.addLayout(horizontal_layout)
 
         # создаем горизонтальный контейнер и помещаем виджеты       
         horizontal_layout = QHBoxLayout()
+        horizontal_layout.addItem(spacer_item)
         horizontal_layout.addWidget(self.btn_timespan_7_days)
         horizontal_layout.addWidget(self.btn_timespan_30_days)
         horizontal_layout.addWidget(self.btn_timespan_90_days)
@@ -67,6 +94,13 @@ class MainWindow(QDialog):
         vertical_layout.addWidget(self.canvas)
 
         self.setLayout(vertical_layout)
+
+    def get_btc_price(self):
+        url = 'https://api.blockchain.info/stats'
+        response = requests.get(url)
+        stats = response.json()
+        btc_price = str(stats["market_price_usd"])
+        return btc_price
 
     # функция получения данных через API и периода получаемых цен
     def get_data_plot(self, timespan):  
